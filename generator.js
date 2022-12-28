@@ -12,12 +12,25 @@ function onlyTables() {
       }
     ];
   }
-  
+
   // this is a passthrough table, it will be copied over entirely 100% to the target database
   function passthroughTables() {
     return ['sales'];
   }
+
+  function databaseSubset() {
+    return {
+      database: 'public',
+      table: 'users',
+      strategy_name: 'random',
+      strategy_options: {
+        percent: 50
+      },
+      passthrough_tables: passthroughTables()
+    };
+  }
   
+
   function transformers() {
     return [
       {
@@ -49,15 +62,7 @@ function onlyTables() {
     source: {
       connection_uri: 'postgres://postgres:password@localhost:5432/mysourcedb',
       only_tables: onlyTables(),
-      database_subset: {
-        database: 'public',
-        table: 'users',
-        strategy_name: 'random',
-        strategy_options: {
-          percent: 50
-        },
-        passthrough_tables: passthroughTables()
-      },
+      database_subset: databaseSubset(),
       transformers: transformers()
     },
     datastore: {
